@@ -9,6 +9,7 @@ Queries are in 'pseudo' sql due to variances in the databases. They are provided
 
 File size |Rows    |Dimensions  | File name
 --|--|--|--
+1030612770|10620815|3           |CensusEthnicity.csv
 285529619 |1486273 |6           |ASHE07E_2013WARDH_2015_3_EN_Earnings_just_Statistics.csv
 82417638  |652159  |4           |RGVA01.csv
 4554415   |39425   |4           |UKBAA01a.csv
