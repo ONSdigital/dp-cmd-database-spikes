@@ -4,16 +4,14 @@ import (
 	"fmt"
 	"flag"
 	bolt "github.com/johnnadratowski/golang-neo4j-bolt-driver"
-	"io"
 	"time"
 	"strconv"
 	"os"
-	"bufio"
 	"encoding/json"
 	"net/http"
 	"bytes"
 	"io/ioutil"
-	"strings"
+	"encoding/csv"
 )
 
 func main() {
@@ -46,7 +44,7 @@ type DimensionOption struct {
 type Observation struct {
 	value   string
 	options []DimensionOption
-	index int
+	index   int
 }
 
 type Parameters struct {
@@ -70,7 +68,7 @@ func importCsvWithBatch(conn bolt.Conn, filePath string, sendBatchFunc func(obse
 		panic(err)
 	}
 
-	scanner := bufio.NewScanner(file)
+	csvReader := csv.NewReader(file)
 
 	var index = 0
 	var batchSize = 2000
@@ -81,8 +79,8 @@ func importCsvWithBatch(conn bolt.Conn, filePath string, sendBatchFunc func(obse
 	observations := make([]*Observation, batchSize)
 
 	// Scan and discard header row (for now) - the data rows contain sufficient information about the structure
-	if !scanner.Scan() && scanner.Err() == io.EOF {
-		fmt.Printf("Encountered EOF immediately when processing header row")
+	if _, err := csvReader.Read(); err != nil {
+		fmt.Printf("Encountered error immediately when processing header row")
 		return
 	}
 
@@ -95,8 +93,8 @@ func importCsvWithBatch(conn bolt.Conn, filePath string, sendBatchFunc func(obse
 		for batchIndex := 0; batchIndex < batchSize && !isFinalBatch; batchIndex++ {
 
 			// each row in the batch
-			scanSuccessful := scanner.Scan()
-			if !scanSuccessful {
+			line, err := csvReader.Read()
+			if err != nil {
 				fmt.Println("EOF reached, no more records to process", nil)
 				isFinalBatch = true
 				observations = observations[0:batchIndex] // the last batch is smaller than batch size, so resize the slice.
@@ -104,7 +102,6 @@ func importCsvWithBatch(conn bolt.Conn, filePath string, sendBatchFunc func(obse
 				totalRows = ((batchNumber - 1) * batchSize) + batchIndex
 				fmt.Println(strconv.Itoa(totalRows) + " messages in total.")
 			} else {
-				line := scanner.Text();
 				observation := createObservation(line, index)
 				observations[batchOffset] = observation
 				index++
@@ -127,8 +124,7 @@ func importCsvWithBatch(conn bolt.Conn, filePath string, sendBatchFunc func(obse
 }
 
 // take a CSV line and turn into observation instance.
-func createObservation(line string, index int) *Observation {
-	tokens := strings.Split(line, ",")
+func createObservation(tokens []string, index int) *Observation {
 
 	dimensionOptions := make([]DimensionOption, 0)
 
@@ -146,7 +142,7 @@ func createObservation(line string, index int) *Observation {
 	return &Observation{
 		value:   tokens[0],
 		options: dimensionOptions,
-		index:index,
+		index:   index,
 	}
 }
 
@@ -232,4 +228,3 @@ func sendBatchUpdateToNeo(query string, batch []map[string]interface{}) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 }
-
