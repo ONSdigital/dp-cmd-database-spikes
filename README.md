@@ -41,3 +41,39 @@ SELECT * from observation
 WHERE `Earnings statistics`="CI_0006603" 
 OR `Earnings statistics`="CI_0006604"
 ```
+
+##### select first 3 rows returned from single dimension values
+
+```
+SELECT * from observation
+WHERE `Earnings statistics`="CI_0006603"
+LIMIT 3
+```
+
+##### select rows 5-8 returned from single dimension values
+
+```
+SELECT * from observation
+WHERE `Earnings statistics`="CI_0006603"
+LIMIT 4
+OFFSET 4
+```
+
+##### select first 3 rows after sorting on returned data from single dimension values
+
+```
+SELECT * from observation
+WHERE `Earnings statistics`="CI_0006603"
+ORDER BY Dimension_Value_4 DESC
+LIMIT 3
+```
+
+##### select rows 5-8 after sorting on returned data from single dimension values
+
+```
+SELECT * from observation
+WHERE `Earnings statistics`="CI_0006603"
+ORDER BY Dimension_Value_4 DESC
+LIMIT 4
+OFFSET 4
+```
