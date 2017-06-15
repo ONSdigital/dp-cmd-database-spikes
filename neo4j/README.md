@@ -28,6 +28,12 @@ Navigate to http://localhost:7474/browser/ to use the browser based interface.
 - `go build`
 - `./import ../../input-files/{filename}`
 
+#### Run the query app
+
+- cd query
+- `go build`
+- `./query --q "MATCH ..."`
+
 ### Go client / driver
  - https://neo4j.com/developer/go/
 

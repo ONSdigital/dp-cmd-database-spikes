@@ -9,3 +9,4 @@ dp-config
 /input-files/RGVA01.csv
 /input-files/UKBAA01a.csv
 /neo4j/import/import
+/neo4j/query/query

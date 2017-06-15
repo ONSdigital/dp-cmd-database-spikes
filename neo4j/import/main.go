@@ -28,7 +28,7 @@ func main() {
 	defer conn.Close()
 
 	// Create the dataset node if it does not already exist.
-	result, _ := conn.ExecNeo("MERGE (ds:Dataset {title: {title}})", map[string]interface{}{"title": "Test dataset"})
+	result, _ := conn.ExecNeo("MERGE (ds:Dataset {title: {title}})", map[string]interface{}{"title": filePath})
 	numResult, _ := result.RowsAffected()
 	fmt.Printf("CREATED ROWS: %d\n", numResult)
 
