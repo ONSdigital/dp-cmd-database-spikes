@@ -40,6 +40,8 @@ SELECT * from observation
 WHERE `Earnings statistics`="CI_0006603"
 ```
 
+(123856 results)
+
 ##### select multiple dimension values
 
 ```
@@ -47,6 +49,8 @@ SELECT * from observation
 WHERE `Earnings statistics`="CI_0006603"
 OR `Earnings statistics`="CI_0006604"
 ```
+
+(247712 results)
 
 ##### select cross-dimension and get multiple values
 
