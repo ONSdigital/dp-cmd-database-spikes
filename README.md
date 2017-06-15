@@ -31,13 +31,13 @@ AND `Earnings statistics`="CI_0006603"
 
 ```
 SELECT * from observation
-`Earnings statistics`="CI_0006603"
+WHERE `Earnings statistics`="CI_0006603"
 ```
 
 ##### select multiple dimension values
 
 ```
 SELECT * from observation
-`Earnings statistics`="CI_0006603" 
+WHERE `Earnings statistics`="CI_0006603" 
 OR `Earnings statistics`="CI_0006604"
 ```
