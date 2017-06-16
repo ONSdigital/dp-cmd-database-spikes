@@ -29,15 +29,12 @@ func main() {
 		panic(err)
 	}
 
-	elapsed := time.Since(startTime)
-	log.Printf("Time elapsed after prepare %s\n", elapsed)
-
 	rows, err := stmt.QueryNeo(nil)
 	if err != nil {
 		panic(err)
 	}
 
-	elapsed = time.Since(startTime)
+	elapsed := time.Since(startTime)
 	log.Printf("Time elapsed after query %s\n", elapsed)
 
 	data, _, err := rows.NextNeo()
@@ -48,7 +45,7 @@ func main() {
 	rowCount := 1
 
 	elapsed = time.Since(startTime)
-	log.Printf("Time elapsed after getting first result %s\n", elapsed)
+	log.Printf("Time elapsed after streaming first result %s\n", elapsed)
 	log.Printf("First row data: %#v\n", data)
 
 	for err == nil {
@@ -57,7 +54,7 @@ func main() {
 	}
 
 	elapsed = time.Since(startTime)
-	log.Printf("Time elapsed after getting last result %s\n", elapsed)
+	log.Printf("Time elapsed after streaming last result %s\n", elapsed)
 	log.Printf("Total number of rows in the result %d\n", rowCount)
 
 	stmt.Close()
