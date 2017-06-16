@@ -50,7 +50,10 @@ func main() {
 
 	for err == nil {
 		data, _, err = rows.NextNeo()
-		rowCount = rowCount + 1
+		if err == nil {
+			rowCount = rowCount + 1
+			//log.Printf("Row %d data: %#v\n", rowCount, data)
+		}
 	}
 
 	elapsed = time.Since(startTime)
