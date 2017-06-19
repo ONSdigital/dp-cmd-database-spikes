@@ -3,6 +3,14 @@
 
 ### Installation / getting started
 
+#### Run Install Neo4j via brew
+
+brew install neo4j
+
+edit /usr/local/Cellar/neo4j/3.2.0/libexec/conf/neo4j.conf
+ - dbms.security.auth_enabled=false
+ - dbms.security.allow_csv_import_from_file_urls=true
+
 #### Run Neo4j in Docker
 Docker related docs: https://neo4j.com/developer/docker/
 
@@ -21,7 +29,11 @@ docker run --rm \
 
 Navigate to http://localhost:7474/browser/ to use the browser based interface.
 
-#### Run the importer
+#### Import data via the cypher console
+
+`cat constraints.cypher | cypher-shell --format plain`
+
+#### Run the importer (note the code for the importer is an old model that has been superceeded and is loaded via cypher console)
 
 - cd import
 - unzip the file you want to import in the ../input-files directory
@@ -33,6 +45,11 @@ Navigate to http://localhost:7474/browser/ to use the browser based interface.
 - cd query
 - `go build`
 - `./query --q "MATCH ..."`
+
+### Common queries
+
+Remove all nodes from the DB: `MATCH (n) DETACH DELETE n`
+Count all nodes `MATCH (n) RETURN count(n)`
 
 ### Go client / driver
  - https://neo4j.com/developer/go/
@@ -54,10 +71,6 @@ CQ (not evaluated) - https://github.com/go-cq/cq
  - Read perf cache based sharding - route different dataset requests to different nodes. : http://info.neo4j.com/rs/neotechnology/images/Understanding%20Neo4j%20Scalability(2).pdf
  - write perf - "Neo4j HA makes use of a single master to coordinate all write operations, and is thus limited to the write throughput of a single machine. Despite this, write throughput can still be very high." - use a queue to buffer write operations.
 
-### Common queries
-
-Remove all nodes from the DB: `MATCH (n) DETACH DELETE n`
-Count all nodes `MATCH (n) RETURN count(n)`
 
 ### Example queries for ASHE07E dataset
 
