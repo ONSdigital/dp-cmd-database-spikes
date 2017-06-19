@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"flag"
-	bolt "github.com/johnnadratowski/golang-neo4j-bolt-driver"
 	"time"
 	"strconv"
 	"os"
@@ -20,19 +19,14 @@ func main() {
 	flag.Parse()
 	fmt.Println("Filepath: " + *filePath)
 
-	driver := bolt.NewDriver()
-	conn, err := driver.OpenNeo("bolt://localhost:7687")
-	if err != nil {
-		panic(err)
-	}
-	defer conn.Close()
+	datasetMap := make(map[string]interface{})
+	datasetMap["title"] = *filePath
 
-	// Create the dataset node if it does not already exist.
-	result, _ := conn.ExecNeo("MERGE (ds:Dataset {title: {title}})", map[string]interface{}{"title": filePath})
-	numResult, _ := result.RowsAffected()
-	fmt.Printf("CREATED ROWS: %d\n", numResult)
+	fmt.Printf("%+v\n", datasetMap)
 
-	importCsvWithBatch(conn, *filePath, sendBatchWithSingleRelation)
+	sendBatchUpdateToNeo("UNWIND {batch} as row MERGE (ds:Dataset {title: \"Test dataset\"})", []map[string]interface{}{ datasetMap })
+
+	importCsvWithBatch(*filePath, sendBatchWithSingleRelation)
 }
 
 type DimensionOption struct {
@@ -61,7 +55,7 @@ type Request struct {
 }
 
 // Parse the CSV and create batches of rows
-func importCsvWithBatch(conn bolt.Conn, filePath string, sendBatchFunc func(observations []*Observation)) {
+func importCsvWithBatch(filePath string, sendBatchFunc func(observations []*Observation)) {
 
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -163,7 +157,7 @@ func sendBatchWithSingleRelation(observations []*Observation) {
 		}
 		dimensions = dimensions + prefix + "`" + observation.Dimension + "`:row." + optionId
 	}
-	query = query + ", (ob)-[:isObservationOf {" + dimensions + "}]->(ds)"
+	query = query + ", (ob)<-[:hasObservation {" + dimensions + "}]-(ds)"
 
 	// populate the batch array of parameters to feed into the query.
 	for i, observation := range observations {
