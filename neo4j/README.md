@@ -31,7 +31,10 @@ Navigate to http://localhost:7474/browser/ to use the browser based interface.
 
 #### Import data via the cypher console
 
-`cat constraints.cypher | cypher-shell --format plain`
+When importing CSV files using the csv importer, the files are expected to be in the `/usr/local/Cellar/neo4j/3.2.0/libexec/import`
+
+Execute a cypher script using the cypher-shell: `cat constraints.cypher | cypher-shell --format plain`
+
 
 #### Run the importer (note the code for the importer is an old model that has been superceeded and is loaded via cypher console)
 
