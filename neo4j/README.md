@@ -31,10 +31,9 @@ Navigate to http://localhost:7474/browser/ to use the browser based interface.
 
 #### Import data via the cypher console
 
-When importing CSV files using the csv importer, the files are expected to be in the `/usr/local/Cellar/neo4j/3.2.0/libexec/import`
+When importing CSV files using the CSV importer (http://neo4j.com/docs/developer-manual/current/cypher/clauses/load-csv/), the files are expected to be in the `/usr/local/Cellar/neo4j/3.2.0/libexec/import`
 
 Execute a cypher script using the cypher-shell: `cat constraints.cypher | cypher-shell --format plain`
-
 
 #### Run the importer (note the code for the importer is an old model that has been superceeded and is loaded via cypher console)
 
@@ -45,6 +44,7 @@ Execute a cypher script using the cypher-shell: `cat constraints.cypher | cypher
 
 #### Run the query app
 
+This is a Golang app that runs a query against Neo4j and iterates the results to print a count.
 - cd query
 - `go build`
 - `./query --q "MATCH ..."`
@@ -68,19 +68,12 @@ CQ (not evaluated) - https://github.com/go-cq/cq
 ### Performance considerations
  - Does not have indexes in the traditional RDBMS sense.
  - Indexes exist in Neo4J, but are only used to find the initial node to start traversing the graph.
+ - consider evaluating queries upfront and filtering by the dimensions with the highest cardinality first. 
+   This will narrow down the results quicker and improve response times. 
+   See https://maxdemarzi.com/2017/03/20/searching-for-objects-using-multiple-dimensions/
  
 ### Scalability considerations
- - clustering / sharding
+https://neo4j.com/blog/neo4j-scalability-infographic/
  - Read perf cache based sharding - route different dataset requests to different nodes. : http://info.neo4j.com/rs/neotechnology/images/Understanding%20Neo4j%20Scalability(2).pdf
  - write perf - "Neo4j HA makes use of a single master to coordinate all write operations, and is thus limited to the write throughput of a single machine. Despite this, write throughput can still be very high." - use a queue to buffer write operations.
-
-
-### Example queries for ASHE07E dataset
-
-```
-MATCH (ds:Dataset)<-[r:isObservationOf]-(ob:Observation)
-WHERE r.Geography="K02000001" AND r.Year="2015" 
-AND r.Sex="CI_0006618" AND r.`Working pattern`="CI_0006618" 
-AND r.`Earnings`="CI_0021537" AND r.`Earnings statistics`="CI_0006603"
-RETURN r,ds,ob LIMIT 100
-```
+ - consider storing row data in another DB if the graph db becomes too large
