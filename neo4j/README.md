@@ -77,3 +77,17 @@ https://neo4j.com/blog/neo4j-scalability-infographic/
  - Read perf cache based sharding - route different dataset requests to different nodes. : http://info.neo4j.com/rs/neotechnology/images/Understanding%20Neo4j%20Scalability(2).pdf
  - write perf - "Neo4j HA makes use of a single master to coordinate all write operations, and is thus limited to the write throughput of a single machine. Despite this, write throughput can still be very high." - use a queue to buffer write operations.
  - consider storing row data in another DB if the graph db becomes too large
+
+### Modelling
+
+Model 1 - encoding all dimension data on a single relationship for each observation.
+
+![alt Model1](Model1.png)
+
+This model has a single entity for the dataset and an entity for each observation. Each observation is linked to the dataset with a single relationship that contains all of the dimension / option data for that observation.
+
+Model 2 - an entity for each dimension option, linking directly to the observations that are related to that option.
+
+![alt Model2](Model2.png)
+
+This model stores each dimension option as its own entity. The dimension is set as the entity type of each option entity. Each observation has its own entity and has a relation to all the options that it relates to.
