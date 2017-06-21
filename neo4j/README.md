@@ -3,9 +3,17 @@
 
 ### Installation / getting started
 
+If you are new to Neo4j a good place to start is getting it installed and navigating to the browser based interface at http://localhost:7474/browser/.
+There are a number of examples and guides in here to explore.
+
+There is also good developer docs online: http://neo4j.com/docs/developer-manual/current/
+A free PDF ebook is available: http://info.neo4j.com/rs/neotechnology/images/Graph_Databases_2e_Neo4j.pdf
+
 #### Run Install Neo4j via brew
 
+```
 brew install neo4j
+```
 
 edit /usr/local/Cellar/neo4j/3.2.0/libexec/conf/neo4j.conf
  - dbms.security.auth_enabled=false
@@ -35,7 +43,7 @@ When importing CSV files using the CSV importer (http://neo4j.com/docs/developer
 
 Execute a cypher script using the cypher-shell: `cat constraints.cypher | cypher-shell --format plain`
 
-#### Run the importer (note the code for the importer is an old model that has been superceeded and is loaded via cypher console)
+#### Run the importer (note the code for the importer is an old model that has been superseded and is loaded via cypher console)
 
 - cd import
 - unzip the file you want to import in the ../input-files directory
@@ -80,13 +88,13 @@ https://neo4j.com/blog/neo4j-scalability-infographic/
 
 ### Modelling
 
-Model 1 - encoding all dimension data on a single relationship for each observation.
+##### Model 1 - encoding all dimension data on a single relationship for each observation.
 
 ![alt Model1](Model1.png)
 
 This model has a single entity for the dataset and an entity for each observation. Each observation is linked to the dataset with a single relationship that contains all of the dimension / option data for that observation.
 
-Model 2 - an entity for each dimension option, linking directly to the observations that are related to that option.
+##### Model 2 - an entity for each dimension option, linking directly to the observations that are related to that option.
 
 ![alt Model2](Model2.png)
 
