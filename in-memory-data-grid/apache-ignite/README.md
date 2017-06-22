@@ -8,7 +8,9 @@ Install `wget` with homebrew, `brew install wget`
 * `unzip apache-ignite-2.0.0-src.zip`
 
 ##### Setup, build and run apache ignite
-* Set `IGNITE_HOME` environment variable `export IGNITE_HOME="$HOME/apache-ignite-2.0.0-src"`
+* Set the following environment variables:
+    `export IGNITE_HOME="$HOME/apache-ignite-2.0.0-src"`
+    `export JAVA_OPTS="-mx512m -ms256m -Djava.net.preferIPv4Stack=true"`
 * Run `mvn clean package -DskipTests`
 * Run `mvn clean package -DskipTests -Prelease,lgpl`
 * Run `mvn clean package -DskipTests -Dignite.edition=hadoop`
@@ -21,15 +23,15 @@ and you will see similar output to this:
 * To see Visor control run the following, `./apache-ignite-2.0.0-src/bin/ignitevisorcmd.sh`
 
 ### Performance tests for Apache Ignite (v 2.0.0)
-#### Ingest times using the REST API
 
-Prior to running go script, do the following
+Prior to running go script, do the following:
 * Stop all nodes/instances of apache-ignite
 * Locate apache-ignite-2.0.0 directory, then run `./apache-ignite-2.0.0-src/bin/ignite.sh examples/config/example-cache.xml`
 * Back in current directory (dp-cmd-database-spikes/in-memory-data-grid/apache-ignite), run `go get; go build`
 * Run `./apache-ignite -file-location=../../input-files/ASHE07E_2013WARDH_2015_3_EN_Earnings_just_Statistics.csv -cache-name=ASH`
 * Similar for other data sets but remember to change the cache name flag
 
+#### Ingest times using the REST API
 Without indexing
 * UKBAA01a =   6.4 seconds (   5 MB, rows    39,424)
 * RGVA01   = 102.8 seconds (  79 MB, rows   652,158)
