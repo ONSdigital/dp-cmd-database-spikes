@@ -1,0 +1,98 @@
+{
+  "settings": {
+    "index": {
+      "number_of_replicas": 1,
+      "number_of_shards": 5
+    }
+  },
+  "mappings": {
+    "test3": {
+      "properties": {
+        "Observation": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "Data_Marking": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Observational_Type_Value": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Hierarchy_1": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Name_1": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Value_1": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Hierarchy_2": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Name_2": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Value_2": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Hierarchy_3": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Name_3": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Value_3": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Hierarchy_4": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Name_4": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Value_4": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Hierarchy_5": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Name_5": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Value_5": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Hierarchy_6": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Name_6": {
+            "index": "not_analyzed",
+            "type": "string"
+        },
+        "Dimension_Value_6": {
+            "index": "not_analyzed",
+            "type": "string"
+        }
+      }
+    }
+  }
+}
