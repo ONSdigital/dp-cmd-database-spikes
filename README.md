@@ -1,6 +1,45 @@
 Database spikes for customise my data
 ===================================
 
+### Summary
+
+The purpose of this project was to find the most appropriate database for storing and querying ONS datasets with dynamic queries.
+
+##### Cassandra / google big table (distributed wide column store)
+
+- Filter large tables quickly given a known key
+- Tables built around queries
+- Specific queries not known up front
+- Not practical to model a table around every combination / permutation of filter
+
+##### MongoDb (document database)
+
+- Stores individual documents
+- Created a single collection to hold the dataset
+- document per row in the dataset
+- Filtering was reasonably fast, but not efficient
+- using a lot of disk swap space as it could not all be held in memory
+
+##### Elastic (document database)
+
+- Same considerations as MongoDb
+
+##### Hadoop (Distributed map reduce)
+
+- Can solve the problem as is scalable
+- Not optimal for the problem
+- More of a sledgehammer solution
+
+##### Apache Ignite (in memory data grid)
+
+
+
+##### Neo4j (graph database)
+
+- Optimised for traversing relationship between data
+- More performant with more filters applied
+
+
 The input files used in the tests are zipped in the input-files directory.
 
 ### Test queries

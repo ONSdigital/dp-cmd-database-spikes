@@ -9,4 +9,5 @@ LOAD CSV WITH HEADERS FROM 'file:///CensusEthnicity.csv' AS line
   CREATE (o)-[:has]->(d3)
 ;
 
-//Added 10663380 labels, created 10663380 nodes, set 10663380 properties, created 31862442 relationships, completed after 1002668 ms.
+// Added 10663380 labels, created 10663380 nodes, set 10663380 properties, created 31862442 relationships, completed after 1002668 ms.
+// Added 10663380 labels, created 10663380 nodes, set 10663380 properties, created 31862442 relationships, completed after 893098 ms. (15 minutes)
