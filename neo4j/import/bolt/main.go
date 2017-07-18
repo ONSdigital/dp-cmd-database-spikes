@@ -3,13 +3,10 @@ package main
 import (
 	"time"
 	"fmt"
-	"strconv"
 	"sync"
 	bolt "github.com/johnnadratowski/golang-neo4j-bolt-driver"
 	"github.com/johnnadratowski/golang-neo4j-bolt-driver/log"
 )
-
-// http://neo4j.com/docs/rest-docs/current/#rest-api-batch-ops
 
 func main() {
 
@@ -35,41 +32,44 @@ func addBatch(wg *sync.WaitGroup) {
 
 	defer wg.Done()
 
-	start := time.Now()
-
 	driver := bolt.NewDriver()
 	conn, _ := driver.OpenNeo("bolt://localhost:7687")
 	defer conn.Close()
 
 	var batchSize = 1000
 
-	observations := "" //make([]string, 0)
-	//data := make([]map[string]interface{}, 0)
+	rows := make([]interface{}, 0)
 
 	for batchIndex := 0; batchIndex < batchSize; batchIndex++ {
-		//observations = append(observations, ",4040")
 
-		if batchIndex != 0 {
-			observations += ","
+		row := map[string]interface{}{
+			"value":"6660",
+			"dim1":"1",
+			"dim2":"2",
+			"dim3":"3",
+			"dim4":"4",
 		}
 
-		observations += "['4040','1','2','3','4']"
+		rows = append(rows, row)
 	}
 
-	query := `WITH [` + observations + `] AS rows UNWIND rows AS row MATCH (d1:dimension), (d2:dimension), (d3:dimension), (d4:dimension)
-  WHERE d1.id = row[1]
-  AND d2.id = row[2]
-  AND d3.id = row[3]
-  AND d4.id = row[4]
-CREATE (o:observation { value:row[0]}),
+	query := `UNWIND $rows AS row MATCH (d1:dimension), (d2:dimension), (d3:dimension), (d4:dimension)
+  WHERE d1.id = row.dim1
+  AND d2.id = row.dim2
+  AND d3.id = row.dim3
+  AND d4.id = row.dim4
+CREATE (o:observation { value:row.value}),
        (o)-[:isValueOf]->(d1),
        (o)-[:isValueOf]->(d2),
        (o)-[:isValueOf]->(d3),
        (o)-[:isValueOf]->(d4)`
 
-	//fmt.Printf(query + "\n")
+	//fmt.Printf("%+v", rows)
+	//fmt.Println("query: " + query)
 
-	result, err := conn.ExecNeo(query, map[string]interface{}{"observations": observations})
+	start := time.Now()
+
+	result, err := conn.ExecNeo(query, map[string]interface{}{"rows": rows})
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 		log.Error(err)
@@ -77,52 +77,9 @@ CREATE (o:observation { value:row[0]}),
 	}
 
 	numResult, _ := result.RowsAffected()
-	fmt.Printf("CREATED ROWS: %d\n", numResult) // CREATED ROWS: 2 (per each iteration)
+	fmt.Printf("CREATED ROWS: %d\n", numResult)
 
 	elapsed := time.Since(start)
 	fmt.Printf("took %s\n", elapsed)
 
-	//fmt.Println(string(b))
-
-
-}
-
-func createObservationCommand(updateIndex int) *update {
-	return &update{
-		Method: "POST",
-		To:     "/node",
-		ID:     updateIndex,
-		Body: map[string]string{
-			"value": "12345",
-		},
-	}
-}
-
-// Add a label for the given observation index
-func addLabelCommand(updateIndex int, observationIndex int) *update {
-	return &update{
-		Method: "POST",
-		To:     "{" + strconv.Itoa(observationIndex) + "}/labels",
-		ID:     updateIndex,
-		Body:   "observation",
-	}
-}
-
-func addRelationCommand(updateIndex int, observationIndex int, dimensionID int) *update {
-	return &update{
-		Method: "POST",
-		To:     "{" + strconv.Itoa(observationIndex) + "}/relationships",
-		ID:     updateIndex,
-		Body: map[string]string{
-			"to":   "/node/" + strconv.Itoa(dimensionID),
-			"type": "isValueOf",
-		},
-	}
-}
-
-type update struct {
-	Method string `json:"method"`
-	To     string `json:"to"`
-	ID     int `json:"id"`
-	Body   interface{} `json:"body"`
 }
