@@ -43,22 +43,22 @@ func addBatch(wg *sync.WaitGroup) {
 	for batchIndex := 0; batchIndex < batchSize; batchIndex++ {
 
 		row := map[string]interface{}{
-			"value":"6660",
-			"dim1":"1",
-			"dim2":"2",
-			"dim3":"3",
-			"dim4":"4",
+			"v":"6660",
+			"d1":0,
+			"d2":1,
+			"d3":2,
+			"d4":3,
 		}
 
 		rows = append(rows, row)
 	}
 
 	query := `UNWIND $rows AS row MATCH (d1:dimension), (d2:dimension), (d3:dimension), (d4:dimension)
-  WHERE d1.id = row.dim1
-  AND d2.id = row.dim2
-  AND d3.id = row.dim3
-  AND d4.id = row.dim4
-CREATE (o:observation { value:row.value}),
+  WHERE id(d1) = row.d1
+  AND id(d2) = row.d2
+  AND id(d3) = row.d3
+  AND id(d4) = row.d4
+CREATE (o:observation { value:row.v}),
        (o)-[:isValueOf]->(d1),
        (o)-[:isValueOf]->(d2),
        (o)-[:isValueOf]->(d3),
