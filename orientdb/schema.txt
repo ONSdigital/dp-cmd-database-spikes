@@ -1,0 +1,12 @@
+CREATE CLASS CensusEthnicity_Dimension1 EXTENDS V
+CREATE CLASS CensusEthnicity_Dimension2 EXTENDS V
+CREATE CLASS CensusEthnicity_Dimension3 EXTENDS V
+CREATE CLASS CensusEthnicity_Observation EXTENDS V
+
+CREATE VERTEX Person SET name='Jay'
+CREATE VERTEX Restaurant SET name='Dante', type='Pizza'
+
+CREATE EDGE Eat FROM ( SELECT FROM Person WHERE name='Luca' )
+          TO ( SELECT FROM Restaurant WHERE name='Dante' )
+
+CREATE EDGE Eat FROM #11:1 TO #12:0

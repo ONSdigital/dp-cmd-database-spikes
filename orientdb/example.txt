@@ -1,0 +1,23 @@
+SET ignoreErrors TRUE
+
+CONNECT localhost root orientdb;
+
+CONNECT remote:localhost/example admin admin;
+#DROP DATABASE
+#CREATE DATABASE remote:localhost/example root orientdb plocal;
+
+CREATE CLASS Person EXTENDS V;
+CREATE CLASS Restaurant EXTENDS V;
+
+CREATE VERTEX Person SET name='Luca';
+CREATE VERTEX Person SET name='Bill';
+CREATE VERTEX Person SET name='Jay';
+
+CREATE VERTEX Restaurant SET name='Dante', type='Pizza';
+CREATE VERTEX Restaurant SET name='Charlie', type='French';
+
+CREATE CLASS Eat EXTENDS E;
+
+CREATE EDGE Eat FROM ( SELECT FROM Person WHERE name='Luca' ) TO ( SELECT FROM Restaurant WHERE name='Dante' );
+
+#DROP DATABASE

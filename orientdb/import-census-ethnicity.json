@@ -1,0 +1,20 @@
+{
+  "source": { "file": { "path": "../input-files/datasets/ASHE07E_2013WARDH_2015_3_EN_Earnings_just_Statistics.csv" } },
+  "extractor": { "csv": {} },
+  "transformers": [
+    { "vertex": { "class": "Post" } }
+  ],
+  "loader": {
+    "orientdb": {
+      "dbURL": "plocal:/temp/databases/blog",
+      "dbType": "graph",
+      "classes": [
+        {"name": "Post", "extends": "V"},
+        {"name": "Comment", "extends": "V"},
+        {"name": "HasComments", "extends": "E"}
+      ], "indexes": [
+        {"class":"Post", "fields":["id:integer"], "type":"UNIQUE" }
+      ]
+    }
+  }
+}
