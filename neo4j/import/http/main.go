@@ -17,8 +17,14 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	wg.Add(4)
+	wg.Add(10)
 
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
 	go addBatch(&wg)
 	go addBatch(&wg)
 	go addBatch(&wg)
@@ -30,37 +36,40 @@ func main() {
 func addBatch(wg *sync.WaitGroup) {
 	start := time.Now()
 
-	var batchSize = 5000
+	var batchSize = 1000
 
 	updates := make([]*update, 0)
 	commandIndex := 0
 
 	for batchIndex := 0; batchIndex < batchSize; batchIndex++ {
 
-		observation := createObservationCommand(commandIndex)
+		observation := createObservationCommand(batchIndex)
 		updates = append(updates, observation)
 		commandIndex++
+	}
 
-		addLabel := addLabelCommand(commandIndex, observation.ID)
+
+	for batchIndex := 0; batchIndex < batchSize; batchIndex++ {
+
+		addLabel := addLabelCommand(commandIndex, batchIndex)
 		updates = append(updates, addLabel)
 		commandIndex++
 
-		dim1 := addRelationCommand(commandIndex, observation.ID, 0)
+		dim1 := addRelationCommand(commandIndex, batchIndex, 0)
 		updates = append(updates, dim1)
 		commandIndex++
 
-		dim2 := addRelationCommand(commandIndex, observation.ID, 1)
+		dim2 := addRelationCommand(commandIndex, batchIndex, 1)
 		updates = append(updates, dim2)
 		commandIndex++
 
-		dim3 := addRelationCommand(commandIndex, observation.ID, 2)
+		dim3 := addRelationCommand(commandIndex, batchIndex, 2)
 		updates = append(updates, dim3)
 		commandIndex++
 
-		dim4 := addRelationCommand(commandIndex, observation.ID, 3)
+		dim4 := addRelationCommand(commandIndex, batchIndex, 3)
 		updates = append(updates, dim4)
 		commandIndex++
-
 	}
 
 	b, err := json.Marshal(updates)

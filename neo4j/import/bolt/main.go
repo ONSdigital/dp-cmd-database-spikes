@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"sync"
 	bolt "github.com/johnnadratowski/golang-neo4j-bolt-driver"
+	"github.com/johnnadratowski/golang-neo4j-bolt-driver/log"
 )
 
 // http://neo4j.com/docs/rest-docs/current/#rest-api-batch-ops
@@ -14,60 +15,76 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	wg.Add(1)
+	wg.Add(10)
 
 	go addBatch(&wg)
-	//go addBatch(&wg)
-	//go addBatch(&wg)
-	//go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
+	go addBatch(&wg)
 
 	wg.Wait()
 }
 
 func addBatch(wg *sync.WaitGroup) {
+
+	defer wg.Done()
+
 	start := time.Now()
 
 	driver := bolt.NewDriver()
 	conn, _ := driver.OpenNeo("bolt://localhost:7687")
 	defer conn.Close()
 
-	var batchSize = 10000
+	var batchSize = 1000
 
-	query := `MATCH (d1:dimension), (d2:dimension), (d3:dimension), (d4:dimension)
-  WHERE d1.id = "1"
-  AND d2.id = "2"
-  AND d3.id = "3"
-  AND d4.id = "4"
-CREATE (o:observation { value:{value}}),
+	observations := "" //make([]string, 0)
+	//data := make([]map[string]interface{}, 0)
+
+	for batchIndex := 0; batchIndex < batchSize; batchIndex++ {
+		//observations = append(observations, ",4040")
+
+		if batchIndex != 0 {
+			observations += ","
+		}
+
+		observations += "['4040','1','2','3','4']"
+	}
+
+	query := `WITH [` + observations + `] AS rows UNWIND rows AS row MATCH (d1:dimension), (d2:dimension), (d3:dimension), (d4:dimension)
+  WHERE d1.id = row[1]
+  AND d2.id = row[2]
+  AND d3.id = row[3]
+  AND d4.id = row[4]
+CREATE (o:observation { value:row[0]}),
        (o)-[:isValueOf]->(d1),
        (o)-[:isValueOf]->(d2),
        (o)-[:isValueOf]->(d3),
        (o)-[:isValueOf]->(d4)`
 
-	//queries := make([]string, 0)
-	//data := make([]map[string]interface{}, 0)
+	//fmt.Printf(query + "\n")
 
-	for batchIndex := 0; batchIndex < batchSize; batchIndex++ {
-
-		conn.ExecNeo(query, map[string]interface{}{"value": 666})
-		//queries = append(queries, query)
-		//data = append(data, map[string]interface{}{ "value":"345" })
-
+	result, err := conn.ExecNeo(query, map[string]interface{}{"observations": observations})
+	if err != nil {
+		fmt.Printf("%+v\n", err)
+		log.Error(err)
+		return
 	}
 
-	//conn.ExecPipeline(queries, data...)
-
-	//for _, result := range results {
-	//	numResult, _ := result.RowsAffected()
-	//	fmt.Printf("CREATED ROWS: %d\n", numResult) // CREATED ROWS: 2 (per each iteration)
-	//}
+	numResult, _ := result.RowsAffected()
+	fmt.Printf("CREATED ROWS: %d\n", numResult) // CREATED ROWS: 2 (per each iteration)
 
 	elapsed := time.Since(start)
-	fmt.Printf("json took %s\n", elapsed)
+	fmt.Printf("took %s\n", elapsed)
 
 	//fmt.Println(string(b))
 
-	wg.Done()
+
 }
 
 func createObservationCommand(updateIndex int) *update {
