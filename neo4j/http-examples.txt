@@ -1,0 +1,108 @@
+POST http://localhost:7474/db/data/batch
+Accept: application/json; charset=UTF-8
+Content-Type: application/json
+
+[
+  {
+    "method" : "POST",
+    "to" : "/node",
+    "id" : 0,
+    "body" : {
+      "name" : "bob"
+    }
+  },  {
+    "method" : "POST",
+    "to" : "{0}/labels",
+    "id" : 1,
+    "body" : "observation"
+  }, {
+     "method" : "POST",
+     "to" : "{0}/relationships",
+     "id" : 2,
+     "body" : {
+       "to" : "/node/0",
+       "type" : "isValueOf"
+     }
+   }, {
+    "method" : "POST",
+    "to" : "{0}/relationships",
+    "id" : 3,
+    "body" : {
+      "to" : "/node/1",
+      "type" : "isValueOf"
+    }
+  }, {
+   "method" : "POST",
+   "to" : "{0}/relationships",
+   "id" : 4,
+   "body" : {
+     "to" : "/node/2",
+     "type" : "isValueOf"
+  }, {
+    "method" : "POST",
+    "to" : "{0}/relationships",
+    "id" : 5,
+    "body" : {
+        "to" : "/node/3",
+        "type" : "isValueOf"
+    }
+ }
+ ]
+
+
+
+ [
+   {
+     "method" : "POST",
+     "to" : "node/10/labels",
+     "id" : 0,
+     "body" : "wut"
+   },
+  ]
+
+
+
+
+
+
+
+
+POST http://localhost:7474/db/data/batch
+Accept: application/json; charset=UTF-8
+Content-Type: application/json
+
+[ {
+  "method" : "POST",
+  "to" : "/node",
+  "id" : 0,
+  "body" : {
+    "name" : "bob"
+  }
+}, {
+  "method" : "POST",
+  "to" : "/node",
+  "id" : 1,
+  "body" : {
+    "age" : 12
+  }
+}, {
+  "method" : "POST",
+  "to" : "{0}/relationships",
+  "id" : 3,
+  "body" : {
+    "to" : "{1}",
+    "data" : {
+      "since" : "2010"
+    },
+    "type" : "KNOWS"
+  }
+}, {
+  "method" : "POST",
+  "to" : "/index/relationship/my_rels",
+  "id" : 4,
+  "body" : {
+    "key" : "since",
+    "value" : "2010",
+    "uri" : "{3}"
+  }
+} ]
